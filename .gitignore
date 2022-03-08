@@ -4,3 +4,7 @@
 .Ruserdata
 arxiv.log
 *_files/
+
+# Remove these later
+*.pdf
+*.tex
