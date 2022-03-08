@@ -2,7 +2,7 @@
 # title: MinION sequencing of environmental DNA from Lake Erie
 title: Environmental DNA sequencing data from algal blooms in Lake Erie using Oxford Nanopore MinION
 authors:
-  - name: Alexander F. Koeppel
+  - name: Alexander Koeppel
     department: Elder Research
     affiliation: Signature Science, LLC
     location: Charlottesville, Virginia
@@ -42,7 +42,7 @@ suppressPackageStartupMessages({
   library(knitr)
 })
 opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, fig.align="center")
-options(knitr.kable.NA = '') 
+options(knitr.kable.NA = '--') 
 # theme_set(theme_bw())
 ```
 
@@ -70,7 +70,7 @@ knitr::include_graphics(here::here("figures/pipeline.png"))
 
 We collected water samples from NOAA GLERLs during a 2014 *Mycrocystis* bloom which left the city of Toledo without drinking water for several days in August of that year [@steffen2017]. Collection sites are shown in the map in Figure \ref{fig:map}, adapted from [@steffen2017].
 
-Subsequent sampling excursions from these NOAA GLERL stations in the 2019 bloom season have taken place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m from stations WE02/WE13. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. 
+Subsequent sampling excursions from these NOAA GLERL stations in the 2019 bloom season have taken place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m from stations WE02/WE13. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020].
 
 ```{r map, fig.cap="GLERL sites from which water samples sequenced here were collected. Pie plots display the percentage of RNA reads (Illumina sequencing) classified to three taxa of interest (\\emph{M. aeruginosa}, \\emph{P. aghardhii}, and \\emph{A. cylindrica}).", fig.align='center', out.width="3in"}
 knitr::include_graphics(here::here("figures/map.png"))
@@ -78,19 +78,20 @@ knitr::include_graphics(here::here("figures/map.png"))
 
 ## Sequencing and data analysis
 
-We extracted DNA from each sample using the Qiagen DNeasy PowerWater kit, which has been used successfully for _Microcystis_ and associated communities [@reynoso2019; @steffen2012]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). We sequenced the eDNA from those samples using the MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline and counted the abundance of _Microcystis_ reads, as well as species and strains within the _Microcystis_ genus where possible. We computed the relative abundance by dividing these counts by the total number of reads passing the QC filters for the same samples. 
+We extracted DNA from each sample using the Qiagen DNeasy PowerWater kit, which has been used successfully for *Microcystis* and associated communities [@reynoso2019; @steffen2012]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). We sequenced the eDNA from those samples using the MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline and counted the abundance of *Microcystis* reads, as well as species and strains within the *Microcystis* genus where possible. We computed the relative abundance by dividing these counts by the total number of reads passing the QC filters for the same samples.
 
 \clearpage
 
 # Data Records
 
-All sequencing data is available in the Sequence Read Archive (SRA) at accession **fixme**.
+All sequencing data is available in the Sequence Read Archive (SRA) at accession **fixme**. Table 1 provides a subset of the metadata associated with these samples. The full metadata is available on the SRA bioproject page.
 
-\scriptsize
+\small
 
-```{r}
-read_csv(here::here("manifest.csv"), col_types="cDccccciciiic") %>% 
-  select(sample:barcode_id) %>% 
+```{r sampletable}
+read_csv(here::here("data/manifest.csv"), col_types="cDccccciciiic") %>% 
+  select(sample:samples_on_cell) %>% 
+  rename(`# Multiplexed`=samples_on_cell) %>% 
   arrange(run_date) %>% 
   select(-protocol) %>% 
   mutate(run_type=stringr::str_to_sentence(run_type)) %>% 
@@ -98,7 +99,6 @@ read_csv(here::here("manifest.csv"), col_types="cDccccciciiic") %>%
   rlang::set_names(stringr::str_replace_all, "_", " ") %>% 
   rlang::set_names(stringr::str_to_sentence) %>% 
   rename(`Input (ng/uL)`=`Qbit ng ul`) %>% 
-  rename(`Barcode ID`=`Barcode id`) %>% 
   rename(GLERL=Glerl) %>% 
   kable(caption="Fixme with a better caption")
 ```
@@ -107,132 +107,32 @@ read_csv(here::here("manifest.csv"), col_types="cDccccciciiic") %>%
 
 # Technical Validation
 
+We found that the relative abundance values are comparable between samples and sampling stations (GLERLs). Though the abundance does appear to be higher at GLERL WE02, this difference is not statistically significant due to the wide range of variation within the samples from each GLERL (t-test, $p=0.407$). This resulted a broad baseline range of pre-bloom *Microcystis* abundance, ranging over almost a full order of magnitude from 0.016% to 0.15% of reads in a given sample.
 
+```{r}
+read_csv(here::here("data/relabundance.csv"), col_types="cccc") %>% 
+  knitr::kable(caption="Average abundance of \\emph{Microcystis} between stations and across samples.")
+```
 
-# Usage Notes
+Additionally, there was notable human and *E. coli* contamination present in several samples that was not revealed until taxonomic classification. While we took steps to track down and eliminate the contamination for later samples, we were unable to conclusively discover the source. Based on the quantities observed in the negative controls and reagent blanks, these included at minimum, 1,400 to several thousand reads classifying as *E. coli*, and from 50 to several hundred reads classifying as *H. sapiens*, and hundreds more classifying to other taxa, including *Shigella*, *Acinetobacter*, and *Microcystis* (though never more than 10 reads in any of the blanks or negative control). In some of the bloom-drawn samples (those from GLERL WE13) the abundance of *E. coli* was greater than that of *Microcystis* despite the fact that these were *Microcystis* blooms. These contaminants could therefore have had a skewing effect on the abundance results.
+
+Detecting the occurrence blooms is important for mitigation, but the ability to distinguish toxic from non-toxic blooms is also critically important. The *mcy* genes code for the microcystin toxin that makes *Microcystis* blooms so harmful. We estimated the abundance of reads aligning to the *Microcystis* *mcy*-family genes as part of this objective. We used the reads from our initial set of pre-bloom samples for this analysis. We aligned all the reads classified to the *Microcystis* genus against a reference consisting of all annotated *Microcystis* genomes using the aligner minimap2 [@li2018], and then filtering the alignments to those intersecting the genomic intervals annotated as containing *mcy*-family genes using bedtools [@quinlan2010]. We saw four hits in the full run pre-bloom sample from GLERL WE13, two to *mcyD*, and one each to *mcyC*, and *mcyE*. The WE02 sample produced no hits at all.
+
+We also subsampled the pre-bloom sequencing runs using the timestamps added by the MinION software for all reads as they are sequenced. We generated a table of read IDs and their time stamps, which were then joined back to the WIMP classification results. We binned the reads into cumulative one-hour and four-hour buckets based on the time of sequencing.
+
+Based on the accumulation data, we can conclude that for this protocol, the majority of the reads for all samples were sequenced within 24 hours of beginning the run. Having subsampled the reads, we then evaluated the length of run time necessary to accurately approximate the range of relative abundances of the genus *Microcystis*, and the species and strains of that that we observed in our samples. By 12 hours, all but the rarest taxa are detectable, and the overall relative abundance of taxa appears consistent from that point forward. By 24 hours, the rarer taxa are detected and the pattern of relative abundances changes very little. Similarly, the relative abundance of both the genus *Microcystis* and the species *Microcystis aeruginosa* converge very close to their final values by 16 hours into the run, with almost no deviation after 24 hours. Our preliminary conclusion is that a 16 to 24 hour run (equivalent to multiplexing two to three samples on a flow cell) is sufficient to capture *Microcystis* abundance reliably for water samples of this type. However, there are significant caveats to this conclusion based on two factors. First, the contaminants that we discovered may have affected our abundance estimates, especially relative abundance. Second, the low yields of DNA extracted from our samples mean that our overall read counts were lower than expected for this MinION protocol.
+
+We next sequenced samples drawn from bloom conditions from the same GLERL stations during the same year as our pre-bloom samples. Downstream processing and taxonomic classification were performed using the same MinKNOW and WIMP pipelines as used for the initial pre-bloom samples. We multiplexed the bloom and pre-bloom samples on our two remaining flow-cells using the ONT Rapid Barcoding Kit 96 (SQK-RBK110.96). Two bloom samples and two pre-bloom samples (one of each from each GLERL) were sequenced on each flow cell to avoid the possibility of batch effects. Using the per-taxon read counts generated for each sample with the WIMP pipeline, we then performed a differential abundance analysis using DESeq2 [@love2014]. This analysis passed an essential quality assurance check, in that all taxa of _Microcystis_ were significantly more abundant in the bloom condition than in the pre-bloom condition. However, the range of different taxa that are differentially abundant suggests the possibility of a pre-bloom taxon profile that might be used as features in a predictive model for forecasting blooms. Taxa such as _Methylobacterium_ and _Stenotrophomonas_ that are significantly more abundant pre-bloom compared to during the bloom might be of particular interest as indicator taxa, for which a shift in abundance might presage a HAB. As with the pre-bloom samples, we also investigated the abundance of the _mcy_-family genes for the bloom samples generated as part of this objective. Reads classified by WIMP as belonging _Microcystis aeruginosa_ were aligned against a reference set of all annotated _Mycrocystis_ genome sequences, and then the alignments were then intersected with the annotated _mcy_ gene positions. While pre-bloom samples in few hits (four reads mapping to _mcyC_, _mcyD_, and _mcyE_ in one full-run sample) we did observed more hits in the bloom-drawn samples. The bloom samples in GLERL WE02 contained hits to all 10 _mcy_ genes. By contrast, in station WE13, which suffered a much less significant bloom in 2019 (the year of sampling) had reads mapping only to some members of the gene family. 
+
+# Acknowledgements, Author Contributions & Competing Interests
+
+The authors would like to express sincere gratitude and acknowledge Jessica Bouchet, David Russell, and Hunter Baylous for assisting with laboratory work on this project, and Dr. Stephanie Guertin for consultation on design and execution.
+
+AK performed sequencing and conducted all data analysis. All authors contributed to study design, results interpretation, and drafting and reviewing the manuscript. 
+
+This study was funded by the Small Business Innovation Research Program of the National Oceanic and Atmospheric Administration, grant number NA21OAR0210481, "HABSSED: Harmful Algal Bloom Surveillance by Sequencing of Environmental DNA."
+
+AK and WG are employees of Elder Research, recipient of the NOAA SBIR grant that funded the collection of this data. ST is an employee of Signature Science, LLC.
 
 # References
 
-```{r}
-# Stop procesing after here
-knitr::knit_exit()
-```
-
-# Introduction
-
-Here goes an introduction text
-
-# Headings: first level
-
-\label{sec:headings}
-
-You can use directly LaTeX command or Markdown text.
-
-LaTeX command can be used to reference other section. See Section \ref{sec:headings}. However, you can also use **bookdown** extensions mechanism for this.
-
-## Headings: second level
-
-You can use equation in blocks
-
-$$
-\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-$$
-
-But also inline i.e $z=x+y$
-
-### Headings: third level
-
-Another paragraph.
-
-# Examples of citations, figures, tables, references
-
-\label{sec:others}
-
-You can insert references. Here is some text [@kour2014real; @kour2014fast] and see @hadash2018estimate.
-
-The documentation for \verb+natbib+ may be found at
-
-You can use custom blocks with LaTeX support from **rmarkdown** to create environment.
-
-::: {.center latex="true"}
-<http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf%7D>
-:::
-
-Of note is the command \verb+\\\\\\\\citet+, which produces citations appropriate for use in inline text.
-
-You can insert LaTeX environment directly too.
-
-```{=tex}
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-```
-produces
-
-```{=tex}
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-```
-```{=tex}
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-```
-## Figures
-
-You can insert figure using LaTeX directly.
-
-See Figure \ref{fig:fig1}. Here is how you add footnotes. [\^Sample of the first footnote.]
-
-```{=tex}
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-  \label{fig:fig1}
-\end{figure}
-```
-But you can also do that using R.
-
-```{r fig2, fig.cap = "Another sample figure"}
-plot(mtcars$mpg)
-```
-
-You can use **bookdown** to allow references for Tables and Figures.
-
-## Tables
-
-Below we can see how to use tables.
-
-See awesome Table\~\ref{tab:table} which is written directly in LaTeX in source Rmd file.
-
-```{=tex}
-\begin{table}
- \caption{Sample table title}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table}
-\end{table}
-```
-You can also use R code for that.
-
-```{r}
-knitr::kable(head(mtcars), caption = "Head of mtcars table")
-```
-
-## Lists
-
--   Item 1
--   Item 2
--   Item 3
