@@ -1,0 +1,4 @@
+﻿GLERL,Mean Microcystis Relative Abundance,Median Microcystis Relative Abundance,95% Confidence Interval
+WE02,0.11 (std. dev. 0.00087),0.09,(0 - 0.32)
+WE13,0.056 (std. dev. 0.00014),0.057,(0.021 - 0.091)
+Combined,0.082 (std. dev. 0.063),0.063,(0.0163 - 0.148)
