@@ -4,7 +4,6 @@ title: Environmental DNA sequencing data from algal blooms in Lake Erie using Ox
 authors:
   - name: Alexander Koeppel
     department: Elder Research
-    affiliation: Signature Science, LLC
     location: Charlottesville, Virginia
   - name: Will Goodrum
     affiliation: Elder Research 
