@@ -1,5 +1,6 @@
 ---
-title: MinION sequencing of environmental DNA from Lake Erie from the Harmful Algal Bloom Surveillance by Sequencing of Environmental DNA (HABSSED) project
+# title: MinION sequencing of environmental DNA from Lake Erie
+title: Environmental DNA sequencing data from algal blooms in Lake Erie using Oxford Nanopore MinION
 authors:
   - name: Alexander F. Koeppel
     department: Elder Research
@@ -20,9 +21,9 @@ authors:
     thanks: "Corresponding author: `sturner <at> signaturescience <dot> com`"
     affiliation: Signature Science, LLC
     location: Charlottesville, Virginia
-    # email: user@host.com
+    # email: user@host.com dont use this unless you want the spam cannon
 abstract: |
-  Enter the text of your abstract here.
+  Harmful Algal Blooms (HABs) pose a significant and increasing risk, both to human health and to the Blue Economy. Genomics approaches to early detection promise to help mitigate these risks. We have developed and prototyped HABSSED (HAB Surveillance by Sequencing of Environmental DNA), a portable, reliable, rapid, low-cost pipeline for detecting HABs in the field using 3rd generation sequencing with the Oxford Nanopore MinION device. We demonstrated the efficacy of our approach by sequencing existing samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. We sequenced environmental DNA (eDNA) from samples drawn before, during, and after a _Microcystis_ bloom, and estimate the abundanced of HAB-associated taxa. While sequencing results showed some evidence of human and _E. coli_ contamination, we find that the abundance of _Mycrocystis_ and other HAB-associated orgnisms significantly differs between pre- and post-bloom environments. Here we describe the publicly available sequencing data that was generated as part of this research, which is available in the Sequence Read Archive (SRA) under accession number **fixme**.
 keywords:
   - MinION
   - Nanopore
@@ -35,34 +36,99 @@ output: rticles::arxiv_article
 ---
 
 ```{r, include=FALSE}
-library(knitr)
-opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
-# library(tidyverse)
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(knitr)
+})
+opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, fig.align="center")
+options(knitr.kable.NA = '') 
 # theme_set(theme_bw())
 ```
 
+\clearpage
+
+# Background & Summary
+
+Harmful algal blooms (HABs) represent a significant challenge to the health of the world's waters and the Blue Economies that depend on them. Toxic HABs of many different species represent a direct risk of injury or death to humans [@erdner2008; @jochimsen1998], but even algal blooms that are not directly toxic can cause significant damage by leading to hypoxia or anoxia in the water column, shading critical submerged aquatic vegetation, and degrading ecosystem function [@heisler2008]. As a result, HABs cause significant harm to the Blue Economy, adversely affect beaches [@morgan2009] and fisheries [@holland2020], and cost hundreds of millions of dollars in efforts to manage and mitigate the blooms [@anderson2008]. As the global climate continues to warm, the number and severity of HABs is expected to increase, along with their incumbent deleterious health and economic effects [@anderson2002; @fu2012; @moore2008].
+
+We are developing a genomics-based approach to help NOAA address this challenge. We developed a prototype of HABSSED (Harmful Algal Bloom Surveillance by Sequencing of Environmental DNA), an environmental DNA (eDNA) sequencing and bioinformatic analysis pipeline for detection of toxic *Microcystis* blooms using third generation sequencing technology, specifically Oxford Nanopore's MinION device. MinION sequencing technology has numerous advantages over more traditional next generation sequencing platforms (e.g. Illumina HiSeq and/or MiSeq) that make it an ideal choice for HAB monitoring. The MinION sequencer is handheld and robust to vibration and other movement, can be powered by the same laptop used for data analysis, and has an initial capital outlay of less than \$1000 USD for the instrument, allowing it to be used in field environments and putting the technology within reach of even small labs. In addition, the MinION is capable of truly de novo sequencing, as no sequence-specific primers are needed; any DNA within the sample can be bound to sequencing adapters and processed. As single molecules of DNA are sequenced, this data is accessible to the user in nearly real-time; analysis can begin as soon as five minutes after sequencing starts, rather than the 24+ hours of a conventional NGS sequencing run. For detection purposes, samples can be effectively sequentially multiplexed onto a single flow cell, decreasing operational costs.
+
+The ultimate goal of the HABSSED is to include all steps necessary for research and monitoring personnel to rapidly obtain an estimate of aquatic microbial species abundance for HAB-related organisms from a raw water sample (Figure \ref{fig:pipeline}). HABSSED is being designed to be field-portable, incorporating genomics tools and workflows that can be run on a well-powered laptop or using an Amazon Web Services (AWS) or other similar cloud instance. Ultimately, field researchers or monitoring professionals will be able to readily detect the presence and abundance of toxic *Microcystis* with minimal specialized training, even aboard ships or in other remote field locations.
+
+For developing and evaluating the HABSSED capability we used MinION to sequence ten samples from several NOAA Great Lakes Environmental Research Laboratories (GLERLs). Here we describe the methods used for sample collection, sequencing, and data deposited to the Sequence Read Archive (SRA) under accession number **fixme**.
+
+```{r pipeline, fig.cap="The HABSSED pipeline. eDNA is extracted from water samples and sequenced using the MinION. Bases are called and reads are demultiplexed and filtered for quality. Taxonomy of reads are classified, and abundances of each taxon is calculated based on read counts. ", fig.align='center', out.width="2.8in"}
+knitr::include_graphics(here::here("figures/pipeline.png"))
+```
 
 \clearpage
 
+# Methods
 
+## Sample collection
+
+We collected water samples from NOAA GLERLs during a 2014 *Mycrocystis* bloom which left the city of Toledo without drinking water for several days in August of that year [@steffen2017]. Collection sites are shown in the map in Figure \ref{fig:map}, adapted from [@steffen2017].
+
+Subsequent sampling excursions from these NOAA GLERL stations in the 2019 bloom season have taken place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m from stations WE02/WE13. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. 
+
+```{r map, fig.cap="GLERL sites from which water samples sequenced here were collected. Pie plots display the percentage of RNA reads (Illumina sequencing) classified to three taxa of interest (\\emph{M. aeruginosa}, \\emph{P. aghardhii}, and \\emph{A. cylindrica}).", fig.align='center', out.width="3in"}
+knitr::include_graphics(here::here("figures/map.png"))
+```
+
+## Sequencing and data analysis
+
+We extracted DNA from each sample using the Qiagen DNeasy PowerWater kit, which has been used successfully for _Microcystis_ and associated communities [@reynoso2019; @steffen2012]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). We sequenced the eDNA from those samples using the MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline and counted the abundance of _Microcystis_ reads, as well as species and strains within the _Microcystis_ genus where possible. We computed the relative abundance by dividing these counts by the total number of reads passing the QC filters for the same samples. 
+
+\clearpage
+
+# Data Records
+
+All sequencing data is available in the Sequence Read Archive (SRA) at accession **fixme**.
+
+\scriptsize
+
+```{r}
+read_csv(here::here("manifest.csv"), col_types="cDccccciciiic") %>% 
+  select(sample:barcode_id) %>% 
+  arrange(run_date) %>% 
+  select(-protocol) %>% 
+  mutate(run_type=stringr::str_to_sentence(run_type)) %>% 
+  mutate(condition=stringr::str_to_sentence(condition)) %>% 
+  rlang::set_names(stringr::str_replace_all, "_", " ") %>% 
+  rlang::set_names(stringr::str_to_sentence) %>% 
+  rename(`Input (ng/uL)`=`Qbit ng ul`) %>% 
+  rename(`Barcode ID`=`Barcode id`) %>% 
+  rename(GLERL=Glerl) %>% 
+  kable(caption="Fixme with a better caption")
+```
+
+\normalsize
+
+# Technical Validation
+
+
+
+# Usage Notes
+
+# References
 
 ```{r}
 # Stop procesing after here
 knitr::knit_exit()
 ```
 
-
 # Introduction
 
 Here goes an introduction text
 
 # Headings: first level
+
 \label{sec:headings}
 
-You can use directly LaTeX command or Markdown text. 
+You can use directly LaTeX command or Markdown text.
 
-LaTeX command can be used to reference other section. See Section \ref{sec:headings}.
-However, you can also use **bookdown** extensions mechanism for this.
+LaTeX command can be used to reference other section. See Section \ref{sec:headings}. However, you can also use **bookdown** extensions mechanism for this.
 
 ## Headings: second level
 
@@ -76,10 +142,10 @@ But also inline i.e $z=x+y$
 
 ### Headings: third level
 
-Another paragraph. 
-
+Another paragraph.
 
 # Examples of citations, figures, tables, references
+
 \label{sec:others}
 
 You can insert references. Here is some text [@kour2014real; @kour2014fast] and see @hadash2018estimate.
@@ -88,43 +154,45 @@ The documentation for \verb+natbib+ may be found at
 
 You can use custom blocks with LaTeX support from **rmarkdown** to create environment.
 
-::: {.center latex=true}
-  <http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}>
+::: {.center latex="true"}
+<http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf%7D>
 :::
 
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  
+Of note is the command \verb+\\\\\\\\citet+, which produces citations appropriate for use in inline text.
 
 You can insert LaTeX environment directly too.
 
+```{=tex}
 \begin{verbatim}
    \citet{hasselmo} investigated\dots
 \end{verbatim}
-
+```
 produces
 
+```{=tex}
 \begin{quote}
   Hasselmo, et al.\ (1995) investigated\dots
 \end{quote}
-
+```
+```{=tex}
 \begin{center}
   \url{https://www.ctan.org/pkg/booktabs}
 \end{center}
-
-
+```
 ## Figures
 
-You can insert figure using LaTeX directly. 
+You can insert figure using LaTeX directly.
 
-See Figure \ref{fig:fig1}. Here is how you add footnotes. [^Sample of the first footnote.]
+See Figure \ref{fig:fig1}. Here is how you add footnotes. [\^Sample of the first footnote.]
 
+```{=tex}
 \begin{figure}
   \centering
   \fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
   \caption{Sample figure caption.}
   \label{fig:fig1}
 \end{figure}
-
+```
 But you can also do that using R.
 
 ```{r fig2, fig.cap = "Another sample figure"}
@@ -133,13 +201,13 @@ plot(mtcars$mpg)
 
 You can use **bookdown** to allow references for Tables and Figures.
 
-
 ## Tables
 
-Below we can see how to use tables. 
+Below we can see how to use tables.
 
-See awesome Table~\ref{tab:table} which is written directly in LaTeX in source Rmd file.
+See awesome Table\~\ref{tab:table} which is written directly in LaTeX in source Rmd file.
 
+```{=tex}
 \begin{table}
  \caption{Sample table title}
   \centering
@@ -156,16 +224,15 @@ See awesome Table~\ref{tab:table} which is written directly in LaTeX in source R
   \end{tabular}
   \label{tab:table}
 \end{table}
-
+```
 You can also use R code for that.
 
 ```{r}
 knitr::kable(head(mtcars), caption = "Head of mtcars table")
 ```
 
-
 ## Lists
 
-- Item 1
-- Item 2 
-- Item 3
+-   Item 1
+-   Item 2
+-   Item 3
