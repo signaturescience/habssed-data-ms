@@ -3,7 +3,7 @@
 title: Environmental DNA sequencing data from algal blooms in Lake Erie using Oxford Nanopore MinION
 authors:
   - name: Alexander Koeppel
-    department: Elder Research
+    affiliation: Elder Research
     location: Charlottesville, Virginia
   - name: Will Goodrum
     affiliation: Elder Research 
