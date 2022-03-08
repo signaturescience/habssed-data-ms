@@ -1,0 +1,14 @@
+sample,run_date,glerl,condition,qbit_ng_ul,protocol,run_type,samples_on_cell,barcode_id,read_total,read_qcpass,reads_classified,contamination
+MP1_RB1,2022-01-26,,reagent blank,LOW,Rapid Barcoding Kit 96,multiplexed,5,01,6134,5568,4201,Yes
+MP2_RB1,2022-02-16,,reagent blank,LOW,Rapid Barcoding Kit 96,multiplexed,6,06,,,,
+MP2_NC1,2022-02-16,,negative control,,Rapid Barcoding Kit 96,multiplexed,6,07,,,,
+FR1_WE13_PB6,2021-10-07,WE13,pre-bloom,7.98,Rapid Sequencing Kit,single sample,1,,828220,609113,311170,Yes
+FR2_WE02_PB2,2021-11-08,WE02,pre-bloom,0.353,Rapid Sequencing Kit,single sample,1,,402146,332514,173533,Yes
+MP1_WE02_PB1,2022-01-26,WE02,pre-bloom,0.264,Rapid Barcoding Kit 96,multiplexed,5,03,11121,10051,6770,Yes
+MP2_WE02_PB2,2022-02-16,WE02,pre-bloom,0.159,Rapid Barcoding Kit 96,multiplexed,6,08,,,,
+MP1_WE13_PB1,2022-01-26,WE13,pre-bloom,0.053,Rapid Barcoding Kit 96,multiplexed,5,05,15384,13004,9527,Yes
+MP2_WE13_PB2,2022-02-16,WE13,pre-bloom,LOW,Rapid Barcoding Kit 96,multiplexed,6,09,,,,
+MP1_WE02_B1,2022-01-26,WE02,bloom,22.9,Rapid Barcoding Kit 96,multiplexed,5,02,176824,165800,139412,Yes
+MP2_WE02_B2,2022-02-16,WE02,bloom,6.16,Rapid Barcoding Kit 96,multiplexed,6,10,,,,
+MP1_WE13_B1,2022-01-26,WE13,bloom,12.4,Rapid Barcoding Kit 96,multiplexed,5,04,147198,131684,85500,Yes
+MP2_WE13_B2,2022-02-16,WE13,bloom,10.8,Rapid Barcoding Kit 96,multiplexed,6,11,,,,
