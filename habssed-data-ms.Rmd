@@ -22,7 +22,7 @@ authors:
     location: Charlottesville, Virginia
     # email: user@host.com dont use this unless you want the spam cannon
 abstract: |
-  Harmful Algal Blooms (HABs) pose a significant and increasing risk, both to human health and to the Blue Economy. Genomics approaches to early detection promise to help mitigate these risks. We have developed and prototyped HABSSED (HAB Surveillance by Sequencing of Environmental DNA), a portable, reliable, rapid, low-cost pipeline for detecting HABs in the field using 3rd generation sequencing with the Oxford Nanopore MinION device. We demonstrated the efficacy of our approach by sequencing existing samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. We sequenced environmental DNA (eDNA) from samples drawn before, during, and after a _Microcystis_ bloom, and estimate the abundanced of HAB-associated taxa. While sequencing results showed some evidence of human and _E. coli_ contamination, we find that the abundance of _Mycrocystis_ and other HAB-associated orgnisms significantly differs between pre- and post-bloom environments. Here we describe the publicly available sequencing data that was generated as part of this research, which is available in the Sequence Read Archive (SRA) under accession number **fixme**.
+  Harmful Algal Blooms (HABs) pose a significant and increasing risk, both to human health and to the Blue Economy. Genomics approaches to early detection promise to help mitigate these risks. We have developed and prototyped HABSSED (HAB Surveillance by Sequencing of Environmental DNA), a portable, reliable, rapid, low-cost pipeline for detecting HABs in the field using 3rd generation sequencing with the Oxford Nanopore MinION device. We demonstrated the efficacy of our approach by sequencing existing samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. We sequenced environmental DNA (eDNA) from samples drawn before, during, and after a _Microcystis_ bloom, and estimate the abundanced of HAB-associated taxa. While sequencing results showed some evidence of human and _E. coli_ contamination, we find that the abundance of _Mycrocystis_ and other HAB-associated orgnisms significantly differs between pre- and post-bloom environments. Here we describe the publicly available sequencing data that was generated as part of this research, which is available in the Sequence Read Archive (SRA) under accession number PRJNA812770.
 keywords:
   - MinION
   - Nanopore
@@ -55,7 +55,7 @@ We are developing a genomics-based approach to help NOAA address this challenge.
 
 The ultimate goal of the HABSSED is to include all steps necessary for research and monitoring personnel to rapidly obtain an estimate of aquatic microbial species abundance for HAB-related organisms from a raw water sample (Figure \ref{fig:pipeline}). HABSSED is being designed to be field-portable, incorporating genomics tools and workflows that can be run on a well-powered laptop or using an Amazon Web Services (AWS) or other similar cloud instance. Ultimately, field researchers or monitoring professionals will be able to readily detect the presence and abundance of toxic *Microcystis* with minimal specialized training, even aboard ships or in other remote field locations.
 
-For developing and evaluating the HABSSED capability we used MinION to sequence ten samples from several NOAA Great Lakes Environmental Research Laboratories (GLERLs). Here we describe the methods used for sample collection, sequencing, and data deposited to the Sequence Read Archive (SRA) under accession number **fixme**.
+For developing and evaluating the HABSSED capability we used MinION to sequence ten samples from several NOAA Great Lakes Environmental Research Laboratories (GLERLs). Here we describe the methods used for sample collection, sequencing, and data deposited to the Sequence Read Archive (SRA) under accession number PRJNA812770.
 
 ```{r pipeline, fig.cap="The HABSSED pipeline. eDNA is extracted from water samples and sequenced using the MinION. Bases are called and reads are demultiplexed and filtered for quality. Taxonomy of reads are classified, and abundances of each taxon is calculated based on read counts. ", fig.align='center', out.width="2.8in"}
 knitr::include_graphics(here::here("figures/pipeline.png"))
@@ -83,7 +83,7 @@ We extracted DNA from each sample using the Qiagen DNeasy PowerWater kit, which 
 
 # Data Records
 
-All sequencing data is available in the Sequence Read Archive (SRA) at accession **fixme**. Table 1 provides a subset of the metadata associated with these samples. The full metadata is available on the SRA bioproject page.
+All sequencing data is available in the Sequence Read Archive (SRA) at accession PRJNA812770. Table 1 provides a subset of the metadata associated with these samples. The full metadata is available on the SRA bioproject page.
 
 \small
 
@@ -99,7 +99,7 @@ read_csv(here::here("data/manifest.csv"), col_types="cDccccciciiic") %>%
   rlang::set_names(stringr::str_to_sentence) %>% 
   rename(`Input (ng/uL)`=`Qbit ng ul`) %>% 
   rename(GLERL=Glerl) %>% 
-  kable(caption="Fixme with a better caption")
+  kable(caption="Subset of the available metadata about samples sequenced in this study, available at SRA accession number PRJNA812770.")
 ```
 
 \normalsize
