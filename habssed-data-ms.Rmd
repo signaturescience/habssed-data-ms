@@ -71,7 +71,7 @@ We collected water samples from NOAA GLERLs during a 2014 *Mycrocystis* bloom wh
 
 Subsequent sampling excursions from these NOAA GLERL stations in the 2019 bloom season have taken place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m from stations WE02/WE13. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020].
 
-```{r map, fig.cap="GLERL sites from which water samples sequenced here were collected. Pie plots display the percentage of RNA reads (Illumina sequencing) classified to three taxa of interest (\\emph{M. aeruginosa}, \\emph{P. aghardhii}, and \\emph{A. cylindrica}).", fig.align='center', out.width="3in"}
+```{r map, fig.cap="GLERL sites from which water samples sequenced here were collected. Pie plots display the percentage of RNA reads (Illumina sequencing) classified to three taxa of interest (\\emph{M. aeruginosa}, \\emph{P. aghardhii}, and \\emph{A. cylindrica}).", fig.align='center', out.width="3.5in"}
 knitr::include_graphics(here::here("figures/map.png"))
 ```
 
