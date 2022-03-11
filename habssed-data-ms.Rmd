@@ -2,7 +2,7 @@
 # title: MinION sequencing of environmental DNA from Lake Erie
 title: Environmental DNA sequencing data from algal blooms in Lake Erie using Oxford Nanopore MinION
 authors:
-  - name: Alexander Koeppel
+  - name: Alexander F. Koeppel
     affiliation: Elder Research
     location: Charlottesville, Virginia
   - name: Will Goodrum
