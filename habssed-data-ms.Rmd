@@ -17,7 +17,7 @@ authors:
     affiliation: James Madison University
     location: Harrisonburg, Virginia
   - name: Stephen D. Turner
-    thanks: "Corresponding author: `sturner <at> signaturescience <dot> com`"
+    thanks: "Corresponding author: `sturner at signaturescience dot com`"
     affiliation: Signature Science, LLC
     location: Charlottesville, Virginia
     # email: user@host.com dont use this unless you want the spam cannon
@@ -58,7 +58,7 @@ The ultimate goal of the HABSSED is to include all steps necessary for research 
 For developing and evaluating the HABSSED capability we used MinION to sequence ten samples from several NOAA Great Lakes Environmental Research Laboratories (GLERLs). Here we describe the methods used for sample collection, sequencing, and data deposited to the Sequence Read Archive (SRA) under accession number PRJNA812770.
 
 ```{r pipeline, fig.cap="The HABSSED pipeline. eDNA is extracted from water samples and sequenced using the MinION. Bases are called and reads are demultiplexed and filtered for quality. Taxonomy of reads are classified, and abundances of each taxon is calculated based on read counts. ", fig.align='center', out.width="2.8in"}
-knitr::include_graphics(here::here("figures/pipeline.png"))
+knitr::include_graphics(here::here("figures/pipeline.jpg"))
 ```
 
 \clearpage
