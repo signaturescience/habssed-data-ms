@@ -1,0 +1,67 @@
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("kableExtra")
+```
+
+# Article information
+
+## Article title
+
+Environmental DNA sequencing dataset from Lake Erie algal blooms using Oxford Nanopore MinION
+
+## Authors
+
+Alexander F. Koeppel^1^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, Stephen D. Turner^1^*
+
+## Affiliations
+
+1. Signature Science LLC: Charlottesville Office, 1670 Discovery Drive, Suite 240, Charlottesville, VA 22911
+1. General Atomics - Commonwealth Computer Research, Inc. (GA-CCRi): 1440 Sachem Pl.,  Charlottesville, VA 22901
+1. James Madison University: Bioscience Building, MSC 7801, 951 Carrier Drive, Room 2001, Harrisonburg, Virginia 22807
+
+## Corresponding author’s email address and Twitter handle
+
+* Email: sturner@signaturescience.com
+* Twitter: @strnr
+
+## Keywords
+
+* MinION
+* Nanopore
+* eDNA
+* Harmful algal blooms
+* Freshwater ecology
+
+## Abstract
+
+Here we describe a publicly available environmental DNA (eDNA) sequence dataset, consisting of samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. Samples were drawn before, during, and after a 2019 _Microcystis_ bloom, and sequenced using 3rd generation sequencing with the Oxford Nanopore MinION device.  eDNA sequences were classified taxonomically, and abundances of Harmful algal bloom (HAB) -associated taxa were estimated.  While the taxonomic data showed some evidence of human and _E. coli_ contamination, we found that the abundance of _Mycrocystis_ and other HAB-associated orgnisms significantly differs between pre- and post-bloom environments. The raw sequence data are available in the Sequence Read Archive (SRA) under accession number PRJNA812770.  Harmful Algal Blooms (HABs) pose a significant and increasing risk, both to human health and to the Blue Economy, and genomic approaches to early detection promise to help mitigate these risks. As such, this dataset could be of interest to freshwater ecology research teams, or any stakeholders interested in the detection and mitigation of HABs.
+
+# Specifications table
+
+
+```{r spectab, echo=FALSE}
+
+#Set bullet lists
+string_bulletlist <- "$\\boldsymbol{\\cdot}$ DNA Sequence (FASTQ)\n $\\boldsymbol{\\cdot}$ Table\n $\\boldsymbol{\\cdot}$ Image"
+
+#Define table
+spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c("Environmental Genomics and Metagenomics","Metagenomic analysis of freshwater microbes associated with harmful algal blooms",string_bulletlist,"","","","",""))
+
+#Set bold for top row (otherwise gets treated as header and loses boldface)
+spec_tbl[1, 1] <- cell_spec(spec_tbl[1, 1], "latex", bold=T)
+
+#Kable styling
+spec_tbl %>% 
+  mutate_all(linebreak) %>%
+  knitr::kable(escape=F, col.names=NULL) %>%
+  column_spec(1, border_left = TRUE, bold=T) %>%
+  column_spec(2, border_right = TRUE, width = "30em") 
+  
+```
+
+# Value of the data
