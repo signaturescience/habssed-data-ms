@@ -1,5 +1,7 @@
 ---
 output: pdf_document
+bibliography: references.bib
+biblio-style: unsrt
 ---
 
 ```{r setup, include=FALSE}
@@ -47,13 +49,23 @@ Here we describe a publicly available environmental DNA (eDNA) sequence dataset,
 ```{r spectab, echo=FALSE}
 
 #Set bullet lists
-string_bulletlist <- "$\\boldsymbol{\\cdot}$ DNA Sequence (FASTQ)\n $\\boldsymbol{\\cdot}$ Table\n $\\boldsymbol{\\cdot}$ Image"
+#dtype_bulletlist <- "$\\boldsymbol{\\cdot}$ Raw Metagenomic Data\n $\\boldsymbol{\\cdot}$ Table\n $\\boldsymbol{\\cdot}$ Image"
+subject <- "Environmental Genomics and Metagenomics"
+sub_area <- "Metagenomic analysis of freshwater microbes associated with harmful algal blooms"
+#dtype <- "$\\boldsymbol{\\cdot}$ Raw Metagenomic Data"
+d_type <- "Raw Metagenomic Data"
+d_acq <- "Freshwater eDNA samples collected from Lake Erie GLERL"
+d_format <- "Raw data (fastq.gz.file)"
+d_coll <- "DNeasy PowerWater® isolation kit was used to extract DNA from the water samples.  DNA was then sequences using the Oxford Nanopore MinION® device."
+d_loc <- 	"Lake Erie NOAA GLERL stations WE13 and WE02. Latitude (approx.) 42.07 N Longitude (approx.) 81.34 W."
+d_acc <- "The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770."
 
 #Define table
-spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c("Environmental Genomics and Metagenomics","Metagenomic analysis of freshwater microbes associated with harmful algal blooms",string_bulletlist,"","","","",""))
+spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c(subject,sub_area,d_type,d_acq,d_format,d_coll,d_loc,d_acc))
 
 #Set bold for top row (otherwise gets treated as header and loses boldface)
 spec_tbl[1, 1] <- cell_spec(spec_tbl[1, 1], "latex", bold=T)
+spec_tbl[4, 1] <- cell_spec(spec_tbl[4, 1], "latex", bold=T)
 
 #Kable styling
 spec_tbl %>% 
@@ -64,4 +76,25 @@ spec_tbl %>%
   
 ```
 
+
 # Value of the data
+
+* The data provide a snapshot of the microbiota present before and during a *Microcystis* bloom.
+* Understanding the taxonomic makeup of the freshwater micorbiome can give us insights into the dynamics of bloom formation.
+* Any stakeholders interested in the dynamics of HABs in general, and *Microcystis* blooms specifically may find these data to be of value.
+
+# Data Description
+
+
+# Experimental design, materials and methods
+
+We collected water samples from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
+
+```{r map, echo = FALSE, fig.cap="GLERL sites WE02 and WE13 from which water samples sequenced here were collected (adapted from https://www.glerl.noaa.gov/).", fig.align='center', out.width="4in"}
+knitr::include_graphics(here::here("figures/map2.jpg"))
+```
+
+Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. Extraction protocol was adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). We sequenced the eDNA from those samples using the ONT MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline and counted the abundance of *Microcystis* reads, as well as species and strains within the *Microcystis* genus where possible. We computed the relative abundance by dividing these counts by the total number of reads passing the QC filters for the same samples.
+
+
+# References
