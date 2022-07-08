@@ -8,3 +8,6 @@ arxiv.log
 # Remove these later
 *.pdf
 *.tex
+data/*results.csv
+data/supplemental_table_S2_diffabund.csv
+data/wimp_classified_filt.rds
