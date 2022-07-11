@@ -14,6 +14,9 @@ library("kableExtra")
 #Read in sample data
 samp_dat <- read_csv(here::here("data","supplemental_table_S1_sampledata.csv"))
 
+#Read in combined WIMP data
+wimp_class <- readRDS(here::here("data","wimp_classified_filt.rds"))
+
 ```
 
 # Article information
@@ -35,7 +38,7 @@ Alexander F. Koeppel^1^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, Ste
 ## Corresponding author’s email address and Twitter handle
 
 * Email: sturner@signaturescience.com
-* Twitter: @strnr
+* Twitter: \@strnr
 
 ## Keywords
 
@@ -47,7 +50,7 @@ Alexander F. Koeppel^1^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, Ste
 
 ## Abstract
 
-Here we describe a publicly available environmental DNA (eDNA) sequence dataset, consisting of samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. Samples were drawn before, during, and after a 2019 _Microcystis_ bloom, and sequenced using 3rd generation sequencing with the Oxford Nanopore MinION device.  eDNA sequences were classified taxonomically, and abundances of Harmful algal bloom (HAB) -associated taxa were estimated.  While the taxonomic data showed some evidence of human and _E. coli_ contamination, we found that the abundance of _Mycrocystis_ and other HAB-associated orgnisms significantly differs between pre- and post-bloom environments. The raw sequence data are available in the Sequence Read Archive (SRA) under accession number PRJNA812770.  Harmful Algal Blooms (HABs) pose a significant and increasing risk, both to human health and to the Blue Economy, and genomic approaches to early detection promise to help mitigate these risks. As such, this dataset could be of interest to freshwater ecology research teams, or any stakeholders interested in the detection and mitigation of HABs.
+Here we describe a publicly available environmental DNA (eDNA) sequence dataset, consisting of samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. Samples were drawn before, during, and after a 2019 _Microcystis_ bloom, and sequenced using 3rd generation sequencing with the Oxford Nanopore MinION device.  eDNA sequences were classified taxonomically, and abundances of harmful algal bloom (HAB) -associated taxa were estimated.  While the taxonomic data showed evidence of significant human and _E. coli_ contamination, we found abundant _Mycrocystis_, especially in the samples drawn from bloom environments. The raw sequence data are available in the Sequence Read Archive (SRA) under accession number PRJNA812770.  HABs pose a significant and increasing risk, both to human health and to the Blue Economy, and genomic approaches to early detection promise to help mitigate these risks. As such, this dataset could be of interest to freshwater ecology research teams, or any stakeholders interested in the detection and mitigation of HABs.
 
 # Specifications table
 
@@ -64,7 +67,7 @@ d_acq <- "Freshwater eDNA samples collected from Lake Erie GLERL"
 d_format <- "Raw data (fastq.gz.file)"
 d_coll <- "DNeasy PowerWater® isolation kit was used to extract DNA from the water samples.  DNA was then sequenced using the Oxford Nanopore MinION® device."
 d_loc <- 	"Lake Erie NOAA GLERL stations WE13 and WE02. Latitude (approx.) 42.07 N Longitude (approx.) 81.34 W."
-d_acc <- "The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770."
+d_acc <- "$\\boldsymbol{\\cdot}$ The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770.\n $\\boldsymbol{\\cdot}$ Data and R code for the figures and tables in this manuscript can be located at https://github.com/signaturescience/habssed-data-ms"
 
 #Define table
 spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c(subject,sub_area,d_type,d_acq,d_format,d_coll,d_loc,d_acc))
@@ -109,27 +112,97 @@ read_csv(here::here("data/manifest.csv"), col_types="cDccccciciiic") %>%
   rlang::set_names(stringr::str_replace_all, "_", " ") %>% 
   rlang::set_names(stringr::str_to_sentence) %>% 
   rename(`Input (ng/uL)`=`Qbit ng ul`) %>% 
-  rename(GLERL=Glerl) %>% 
+  rename(GLERL=Glerl) %>%
+  left_join(samp_dat %>% select(sample, read_qcpass), by=c("Sample"="sample")) %>%
+  rename(`Reads (passing QC)`=read_qcpass) %>%
+  select(-`# Multiplexed`) %>%
+  arrange(Condition) %>%
   kable(caption="Subset of the available metadata about samples sequenced in this study, available at SRA accession number PRJNA812770.", booktabs = TRUE)
 ```
 
-The results of the taxonomic classification are presented in \ref{fig:taxa}. 
+The results of the taxonomic classification are presented in figure \ref{fig:taxa}. There was notable human and *E. coli* contamination present in several samples that was not revealed until taxonomic classification. While we took steps to track down and eliminate the contamination for later samples, we were unable to conclusively discover the source. Based on the quantities observed in the negative controls and reagent blanks, these included at minimum, 1,400 to several thousand reads classifying as *E. coli*, and from 50 to several hundred reads classifying as *H. sapiens*, and hundreds more classifying to other taxa, including *Shigella*, *Acinetobacter*, and *Microcystis* (though never more than 10 reads in any of the blanks or negative control). In some of the bloom-drawn samples (those from GLERL WE13) the abundance of *E. coli* was greater than that of *Microcystis* despite the fact that these were *Microcystis* blooms. These contaminants could therefore have had a skewing effect on the abundance results.
 
-```{r taxa, echo = FALSE, fig.cap="Stacked bar charts of relative taxon abundance (genus level) for all samples in the dataset."}
+```{r taxa, echo = FALSE, warning= FALSE, messsage = FALSE, fig.cap="Stacked bar charts of relative taxon abundance (genus level) for all samples in the dataset. Top 10 most abundant genera across all samples are displayed. All other genera were classed as 'Other'. Sample names are the GLERL from which the sample was drawn, the condition (Bloom or Pre-bloom) and the replicate number. Reagent blank and negative control results are also inlcuded (right 3 columns). Note the presence of \\textit{Escherichia} and \\textit{Homo} classified reads  (putative contamination) across all samples.", fig.align='center', out.width="4in"}
 
+#Make list of top 10 genera
+top_10_gen <- wimp_class %>%
+  filter(!is.na(genus)) %>%
+  filter(genus != "Unassigned") %>%
+  count(genus) %>%
+  arrange(-n) %>%
+  head(10) %>%
+  pull(genus)
 
+cols <- c("Acinetobacter" = "purple", "Candidatus Fonsibacter" = "darkblue",
+          "Candidatus Methylopumilis" = "darkgreen", "Candidatus Nanopelagicus" = "blue",
+          "Candidatus Planktophila" = "green", "Escherichia" = "red2", "Homo" = "orange",
+          "Microcystis" = "forestgreen", "Muvirus" = "Yellow", "Salmonella" = "salmon",
+          "Other" = "darkgrey")
+##p + scale_colour_manual(values = cols)
+
+#Make genus count table
+wimp_class %>%
+  filter(!is.na(genus)) %>%
+  filter(genus != "Unassigned") %>%
+  mutate(genmod = ifelse(genus %in% top_10_gen, genus, "Other")) %>%
+  mutate(genmod = factor(genmod, levels=top_10_gen %>% sort() %>% append("Other"))) %>%
+  rename(gen_og = genus, genus = genmod) %>%
+  count(barcode, genus) %>%
+  group_by(barcode) %>%
+  mutate(n_frac = n / sum(n)) %>%
+  ungroup() %>%
+  left_join(samp_dat %>% select(barcode, sample), by="barcode") %>%
+  mutate(samptype = case_when(
+    str_detect(sample,"_RB") ~ "Reagent Blank",
+    str_detect(sample,"_NC") ~ "Negative Control",
+    str_detect(sample,"_B") ~ "Bloom",
+    str_detect(sample,"_B") ~ "Pre-Bloom",
+    TRUE ~ "NA"
+  )) %>%
+  mutate(sampname = case_when(
+    sample == "MP1_RB1" ~ "Reagent Blank 1",
+    sample == "MP2_RB1" ~ "Reagent Blank 2",
+    sample == "MP2_NC1" ~ "Negative Control",
+    sample == "MP1_WE02_B1" ~ "WE02 Bloom 1",
+    sample == "MP1_WE02_PB1" ~ "WE02 Pre-bloom 1",
+    sample == "MP1_WE13_B1" ~ "WE13 Bloom 1",
+    sample == "MP1_WE13_PB1" ~ "WE13 Pre-bloom 1",
+    sample == "MP2_WE02_PB2" ~ "WE02 Pre-bloom 2",
+    sample == "MP2_WE13_PB2" ~ "WE13 Pre-bloom 2",
+    sample == "MP2_WE02_B2" ~ "WE02 Bloom 2",
+    sample == "MP2_WE13_B2" ~ "WE13 Bloom 2",
+    sample == "FR1_WE13_PB6" ~ "WE02 Pre-bloom 3",
+    sample == "FR2_WE02_PB2" ~ "WE13 Pre-bloom 3",
+    TRUE ~ "NA"
+  )) %>%
+  mutate(sampname = factor(sampname, levels=c( "WE02 Bloom 1", "WE02 Bloom 2", "WE13 Bloom 1", "WE13 Bloom 2",
+                                               "WE02 Pre-bloom 1", "WE02 Pre-bloom 2", "WE02 Pre-bloom 3",
+                                               "WE13 Pre-bloom 1", "WE13 Pre-bloom 2", "WE13 Pre-bloom 3",
+                                               "Reagent Blank 1", "Reagent Blank 2", "Negative Control"))) %>%
+  ggplot(aes(x=sampname, y=n_frac, fill=genus)) +
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=cols)+
+  #scale_fill_viridis(discrete = T, option="D") +
+  xlab("Sample ID") +
+  ylab("Relative Abundance")+
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 
 ```
 
 # Experimental design, materials and methods
 
-We collected water samples from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
+We sequenced water samples collected from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
 
 ```{r map, echo = FALSE, fig.cap="GLERL sites WE02 and WE13 from which water samples sequenced here were collected (adapted from https://www.glerl.noaa.gov/).", fig.align='center', out.width="4in"}
+
 knitr::include_graphics(here::here("figures/map2.jpg"))
+
 ```
 
-Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. Extraction protocol was adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). DNA cocentrations for each sample were estimated using a Qbit analyzer.  We sequenced the eDNA from those samples using the ONT MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline and counted the abundance of *Microcystis* reads, as well as species and strains within the *Microcystis* genus where possible. We computed the relative abundance by dividing these counts by the total number of reads passing the QC filters for the same samples.
+Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. Extraction protocol was adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). DNA cocentrations for each sample were estimated using a Qbit analyzer.  We sequenced the eDNA from those samples using the ONT MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline. Relative abundance was computed by dividing these genus-specific read counts by the total number of reads passing the QC filters for the same samples.
+
+Figure \ref{fig:taxa} was generated in R[@rteam2021], by joining the WIMP taxonomic results for all samples to their respective NCBI taxonomic IDs, aggregating at the genus level, and then plotting.  The code used to generate the figure can be found at: https://github.com/signaturescience/habssed-data-ms
 
 # Ethics Statements
 
