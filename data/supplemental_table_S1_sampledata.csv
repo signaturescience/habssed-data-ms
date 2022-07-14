@@ -1,0 +1,14 @@
+sample,run_date,glerl,condition,qbit (ng/ul),protocol,run_type,samples_on_cell,run_time,barcode_id,barcode,read_total,read_qcpass,reads_classified,microcystis_count,microcystis_rel,contamination
+MP1_RB1,1/26/2022,NA,reagent blank,LOW,Rapid Barcoding Kit 96,multiplexed,5,48 hrs,01,barcode01,6134,5568,4201,13,0.00233477,Yes
+MP2_RB1,2/16/2022,NA,reagent blank,LOW,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,06,barcode06,8096,6553,1928,3,0.000457806,Yes
+MP2_NC1,2/16/2022,NA,negative control,NA,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,07,barcode07,12059,10156,7531,9,0.000886176,Yes
+FR1_WE13_PB6,10/7/2021,WE13,pre-bloom,7.98,Rapid Sequencing Kit,single sample,1,48 hrs,NA,fullrun1,828220,609113,311170,250,0.000410433,Yes
+FR2_WE02_PB2,11/8/2021,WE02,pre-bloom,0.353,Rapid Sequencing Kit,single sample,1,48 hrs,NA,fullrun2,402146,332514,173533,674,0.002026982,Yes
+MP1_WE02_PB1,1/26/2022,WE02,pre-bloom,0.264,Rapid Barcoding Kit 96,multiplexed,5,48 hrs,03,barcode03,11121,10051,6770,9,0.000895433,Yes
+MP2_WE02_PB2,2/16/2022,WE02,pre-bloom,0.159,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,08,barcode08,14328,12447,7563,4,0.000321363,Yes
+MP1_WE13_PB1,1/26/2022,WE13,pre-bloom,0.053,Rapid Barcoding Kit 96,multiplexed,5,48 hrs,05,barcode05,15384,13004,9527,9,0.000692095,Yes
+MP2_WE13_PB2,2/16/2022,WE13,pre-bloom,LOW,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,09,barcode09,14772,12221,9111,7,0.000572785,Yes
+MP1_WE02_B1,1/26/2022,WE02,bloom,22.9,Rapid Barcoding Kit 96,multiplexed,5,48 hrs,02,barcode02,176824,165800,139412,92350,0.556996381,Yes
+MP2_WE02_B2,2/16/2022,WE02,bloom,6.16,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,10,barcode10,145472,133788,112392,75555,0.564736748,Yes
+MP1_WE13_B1,1/26/2022,WE13,bloom,12.4,Rapid Barcoding Kit 96,multiplexed,5,48 hrs,04,barcode04,147198,131684,85500,4572,0.03471948,Yes
+MP2_WE13_B2,2/16/2022,WE13,bloom,10.8,Rapid Barcoding Kit 96,multiplexed,6,48 hrs,11,barcode11,186489,164230,106485,1298,0.00790355,Yes
