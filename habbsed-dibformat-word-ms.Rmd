@@ -184,13 +184,18 @@ genus_count_by_barcode %>%
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 
+# Save the figure for later in case you need to upload figures separately
+fp <- here::here("figures/fig1-stacked-barchart.png")
+if (!file.exists(fp)) ggsave(fp, plot=last_plot(), width=12, height=10, scale=.6)
+rm(fp)
+
 ```
 
 # Experimental design, materials and methods
 
 We sequenced water samples collected from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
 
-```{r map, echo = FALSE, fig.cap="GLERL sites WE02 and WE13 from which water samples sequenced here were collected (adapted from https://www.glerl.noaa.gov/).", out.width="5in"}
+```{r map, echo = FALSE, fig.cap="GLERL sites WE02 and WE13 from which water samples sequenced here were collected (adapted from https://www.glerl.noaa.gov/).", out.width="6in"}
 
 knitr::include_graphics(here::here("figures/map2.jpg"))
 
@@ -198,16 +203,15 @@ knitr::include_graphics(here::here("figures/map2.jpg"))
 
 Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. Extraction protocol was adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). DNA cocentrations for each sample were estimated using a Qbit analyzer.  We sequenced the eDNA from those samples using the ONT MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline. Relative abundance was computed by dividing these genus-specific read counts by the total number of reads passing the QC filters for the same samples.
 
-Figure \ref{fig:taxa} was generated in R[@rteam2021], by joining the WIMP taxonomic results for all samples to their respective NCBI taxonomic IDs, aggregating at the genus level, and then plotting.  The code used to generate the figure can be found at: https://github.com/signaturescience/habssed-data-ms
+<!-- Figure 1 was generated in R [@rteam2021], by joining the WIMP taxonomic results for all samples to their respective NCBI taxonomic IDs, aggregating at the genus level, and then plotting. The code used to generate the figure can be found at: https://github.com/signaturescience/habssed-data-ms -->
 
 # Ethics Statements
 
-The authors declare no financial or commercial conflicts of interest.  
-<!-- fixme: Just a placeholder because I don't think this is true  We're trying to make a commercial pipeline out of this.  I assume that counts as a financial interest? -->
+AK and ST are employees of Signature Science, LLC. AK and WG were employees of Elder Research at the time this research were conducted. MS and LW are employees of James Madison University.
 
 # CRediT author statement
 
-**Alex Koeppel**: Performed sequencing and conducted all data analysis. **Will Goodrum, Morgan Steffen, Louie Wurch, Stephen D. Turner**: Contributed to study design, results interpretation, and drafting and reviewing the manuscript.
+**Alex Koeppel**: Conceptualization, methodology, software, formal analysis, investigation, data curation, writing -- original draft, writing -- review and editing, visualization, funding acquisition. **Will Goodrum**: Project administration. **Morgan Steffen**: Conceptualization, methodology, investigation, writing -- review and editing. , **Louie Wurch**: Conceptualization, methodology, investigation, writing -- review and editing. **Stephen D. Turner**: Conceptualization, methodology, investigation, data curation, writing -- review and editing, supervision, funding acquisition. 
 
 # Acknowledgements
 
@@ -215,5 +219,8 @@ The authors would like to express sincere gratitude and acknowledge Jessica Bouc
 
 This material is based upon work supported by the SBIR Program within the NOAA Technology Partnerships Office under Grant No. NA21OAR0210481.
 
+# Declaration of interests
+
+The authors declare the following financial interests/personal relationships which may be considered as potential competing interests: Stephen Turner and Alex Koeppel are employees of Signature Science, LLC (SigSci). SigSci is a subawardee recipient of funding from the NOAA SBIR grant noted above, which supported a proof of concept study to establish the technical merit, feasibility, and commercial potential of a technology.
 
 # References
