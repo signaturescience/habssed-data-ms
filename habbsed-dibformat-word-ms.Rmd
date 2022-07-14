@@ -18,9 +18,8 @@ library("kableExtra")
 #Read in sample data
 samp_dat <- read_csv(here::here("data","supplemental_table_S1_sampledata.csv"))
 
-#Read in combined WIMP data
-wimp_class <- readRDS(here::here("data","wimp_classified_filt.rds"))
-
+#Read in the preprocessed data
+load(here::here("data/preprocessed.rd"))
 ```
 
 # Article information
@@ -31,7 +30,7 @@ Environmental DNA sequencing dataset from Lake Erie algal blooms using Oxford Na
 
 ## Authors
 
-Alexander F. Koeppel^1^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, Stephen D. Turner^1^*
+Alexander F. Koeppel^1,2^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, Stephen D. Turner^1^*
 
 ## Affiliations
 
