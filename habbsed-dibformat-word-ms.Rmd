@@ -126,32 +126,24 @@ read_csv(here::here("data/manifest.csv"), col_types="cDccccciciiic") %>%
 
 The results of the taxonomic classification are presented in figure \ref{fig:taxa}. There was notable human and *E. coli* contamination present in several samples that was not revealed until taxonomic classification. While we took steps to track down and eliminate the contamination for later samples, we were unable to conclusively discover the source. Based on the quantities observed in the negative controls and reagent blanks, these included at minimum, 1,400 to several thousand reads classifying as *E. coli*, and from 50 to several hundred reads classifying as *H. sapiens*, and hundreds more classifying to other taxa, including *Shigella*, *Acinetobacter*, and *Microcystis* (though never more than 10 reads in any of the blanks or negative control). In some of the bloom-drawn samples (those from GLERL WE13) the abundance of *E. coli* was greater than that of *Microcystis* despite the fact that these were *Microcystis* blooms. These contaminants could therefore have had a skewing effect on the abundance results.
 
-```{r taxa, echo = FALSE, warning= FALSE, messsage = FALSE, fig.cap="Stacked bar charts of relative taxon abundance (genus level) for all samples in the dataset. Top 10 most abundant genera across all samples are displayed. All other genera were classed as 'Other'. Sample names are the GLERL from which the sample was drawn, the condition (Bloom or Pre-bloom) and the replicate number. Reagent blank and negative control results are also inlcuded (right 3 columns). Note the presence of \\textit{Escherichia} and \\textit{Homo} classified reads  (putative contamination) across all samples.", fig.align='center', out.width="4in"}
+```{r taxa, echo = FALSE, warning= FALSE, messsage = FALSE, fig.cap="Stacked bar charts of relative taxon abundance (genus level) for all samples in the dataset. Top 10 most abundant genera across all samples are displayed. All other genera were classed as 'Other'. Sample names are the GLERL from which the sample was drawn, the condition (Bloom or Pre-bloom) and the replicate number. Reagent blank and negative control results are also inlcuded (right 3 columns). Note the presence of \\textit{Escherichia} and \\textit{Homo} classified reads  (putative contamination) across all samples.", fig.align='center', out.width="8in"}
 
-#Make list of top 10 genera
-top_10_gen <- wimp_class %>%
-  filter(!is.na(genus)) %>%
-  filter(genus != "Unassigned") %>%
-  count(genus) %>%
-  arrange(-n) %>%
-  head(10) %>%
-  pull(genus)
 
-cols <- c("Acinetobacter" = "purple", "Candidatus Fonsibacter" = "darkblue",
-          "Candidatus Methylopumilis" = "darkgreen", "Candidatus Nanopelagicus" = "blue",
-          "Candidatus Planktophila" = "green", "Escherichia" = "red2", "Homo" = "orange",
-          "Microcystis" = "forestgreen", "Muvirus" = "Yellow", "Salmonella" = "salmon",
+cols <- c("Acinetobacter" = "purple", 
+          "Candidatus Fonsibacter" = "darkblue",
+          "Candidatus Methylopumilus" = "darkgreen", 
+          "Candidatus Nanopelagicus" = "blue",
+          "Candidatus Planktophila" = "green", 
+          "Escherichia" = "red2", 
+          "Homo" = "orange",
+          "Microcystis" = "forestgreen", 
+          "Muvirus" = "Yellow", 
+          "Salmonella" = "salmon",
           "Other" = "darkgrey")
 ##p + scale_colour_manual(values = cols)
 
 #Make genus count table
-wimp_class %>%
-  filter(!is.na(genus)) %>%
-  filter(genus != "Unassigned") %>%
-  mutate(genmod = ifelse(genus %in% top_10_gen, genus, "Other")) %>%
-  mutate(genmod = factor(genmod, levels=top_10_gen %>% sort() %>% append("Other"))) %>%
-  rename(gen_og = genus, genus = genmod) %>%
-  count(barcode, genus) %>%
+genus_count_by_barcode %>%
   group_by(barcode) %>%
   mutate(n_frac = n / sum(n)) %>%
   ungroup() %>%
