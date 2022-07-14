@@ -53,7 +53,7 @@ Alexander F. Koeppel^1,2^, Will Goodrum^2^, Morgan Steffen^3^, Louie Wurch^3^, S
 
 ## Abstract
 
-Here we describe a publicly available environmental DNA (eDNA) sequence dataset, consisting of samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. Samples were drawn before, during, and after a 2019 _Microcystis_ bloom, and sequenced using 3rd generation sequencing with the Oxford Nanopore MinION device.  eDNA sequences were classified taxonomically, and abundances of harmful algal bloom (HAB) -associated taxa were estimated.  While the taxonomic data showed evidence of significant human and _E. coli_ contamination, we found abundant _Mycrocystis_, especially in the samples drawn from bloom environments. The raw sequence data are available in the Sequence Read Archive (SRA) under accession number PRJNA812770.  HABs pose a significant and increasing risk, both to human health and to the Blue Economy, and genomic approaches to early detection promise to help mitigate these risks. As such, this dataset could be of interest to freshwater ecology research teams, or any stakeholders interested in the detection and mitigation of HABs.
+Here we describe a publicly available environmental DNA (eDNA) sequence dataset, consisting of samples collected from a National Oceanic and Atmospheric Administration (NOAA) Great Lakes Environmental Research Laboratory (GLERL) on Lake Erie. We sequenced samples drawn from before, during, and after a 2019 _Microcystis_ bloom using 3rd generation sequencing with the Oxford Nanopore MinION device.  We classified the eDNA reads taxonomically, and estimated the abundances of all taxa in each sample.  While the taxonomic data showed evidence of significant human and _E. coli_ contamination, we found abundant _Mycrocystis_, especially in the samples drawn from bloom environments. The raw sequence data are available in the Sequence Read Archive (SRA) under accession number PRJNA812770.  HABs pose a significant and increasing risk, both to human health and to the Blue Economy, and genomic approaches to early detection promise to help mitigate these risks. As such, this dataset could be of interest to freshwater ecology research teams, or any stakeholders interested in the detection and mitigation of HABs.
 
 # Specifications table
 
@@ -71,7 +71,7 @@ d_format <- "Raw data (fastq.gz.file)"
 d_coll <- "DNeasy PowerWater® isolation kit was used to extract DNA from the water samples.  DNA was then sequenced using the Oxford Nanopore MinION® device."
 d_loc <- 	"Lake Erie NOAA GLERL stations WE13 and WE02. Latitude (approx.) 42.07 N Longitude (approx.) 81.34 W."
 #d_acc <- "$\\boldsymbol{\\cdot}$ The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770.\n $\\boldsymbol{\\cdot}$ Data and R code for the figures and tables in this manuscript can be located at https://github.com/signaturescience/habssed-data-ms"
-d_acc <- "The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770, accessible at https://www.ncbi.nlm.nih.gov/bioproject/PRJNA812770/."
+d_acc <- "We have deposited the raw sequences in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770, accessible at https://www.ncbi.nlm.nih.gov/bioproject/PRJNA812770/."
 
 #Define table
 spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c(subject,sub_area,d_type,d_acq,d_format,d_coll,d_loc,d_acc))
@@ -100,8 +100,8 @@ spec_tbl %>%
 
 # Data Description
 
-This dataset consists of raw environmental DNA (eDNA) reads from before and during a *Microcystis* bloom.  The DNA was sequenced using the ONT MinION, and reads were classified taxonomically using the ONT What's In My Pot (WIMP) pipeline.  The complete dataset (all reads passing MinION QC) numbered `r samp_dat %>% pull(read_qcpass) %>% sum() %>% scales::comma()` reads. Of these, `r samp_dat %>% pull(reads_classified) %>% sum() %>% scales::comma()` were successfully taxonomically classified.
-Table 1 provides a subset of the metadata associated with these samples, including the GLERL from which the sample was drawn, the date of sampling, bloom condition at the time of sampling, and DNA concentration. Because some samples were sequenced as a single run, and others as part of a multiplexed run, the multiplexing information is also included. The full metadata is available on the SRA BioProject page.
+This dataset consists of raw environmental DNA (eDNA) reads from before and during a *Microcystis* bloom.  We sequenced the DNA using the ONT MinION, and classified them taxonomically using the ONT What's In My Pot (WIMP) pipeline.  The complete dataset (all reads passing MinION QC) numbered `r samp_dat %>% pull(read_qcpass) %>% sum() %>% scales::comma()` reads. Of these, `r samp_dat %>% pull(reads_classified) %>% sum() %>% scales::comma()` were successfully taxonomically classified.
+Table 1 provides a subset of the metadata associated with these samples, including the GLERL from which the sample was drawn, the date of sampling, bloom condition at the time of sampling, and DNA concentration. Because we sequenced some samples as a single run, and others as part of a multiplexed run, the multiplexing information is also included. The complete metadata is available on the SRA BioProject page.
 
 \small
 
@@ -193,7 +193,7 @@ rm(fp)
 
 # Experimental design, materials and methods
 
-We sequenced water samples collected from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. Samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
+We sequenced water samples collected from NOAA GLERL stations WE02 and WE13 during a 2019 *Mycrocystis* bloom in Lake Erie. Sampling excursions from these NOAA GLERL stations in the 2019 bloom season took place during pre-, peak, and post-bloom conditions. The samples were drawn using standard collection protocols [@steffen2017] at a water depth of 0.5m-1.5m. Metadata on the physical and chemical properties of the water at the time of sampling were also collected [@boedecker2020]. Collection sites are show in the map in Figure \ref{fig:map} (adapted from www.glerl.noaa.gov).
 
 ```{r map, echo = FALSE, fig.cap="GLERL sites WE02 and WE13 from which water samples sequenced here were collected (adapted from https://www.glerl.noaa.gov/).", out.width="6in"}
 
@@ -201,7 +201,7 @@ knitr::include_graphics(here::here("figures/map2.jpg"))
 
 ```
 
-Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. Extraction protocol was adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). DNA cocentrations for each sample were estimated using a Qbit analyzer.  We sequenced the eDNA from those samples using the ONT MinION Mk1C device, which performed base-calling and quality filtering using ONT's embedded MinKNOW software using the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline. Relative abundance was computed by dividing these genus-specific read counts by the total number of reads passing the QC filters for the same samples.
+Biomass was collected onto 0.2 um Sterivex filters and kept on ice until they were returned to the lab where they were stored at -80C until extraction. We extracted the DNA from the samples, following a protocol adapted according to [@cruaud2017]. We then prepared the libraries for MinION sequencing using Oxford Nanopore Technologies (ONT) sequencing kit (initially the Rapid Sequencing Kit (SQK-RAD004) but transitioning to the Rapid Barcoding Kit 96 (SQK-RBK110.96) for later runs). We estimated DNA concentrations for each sample using a Qbit analyzer.  We sequenced the eDNA from those samples using the ONT MinION Mk1C device, and performed base-calling and quality filtering using ONT's embedded MinKNOW software under the default settings. We then performed taxonomic classification using the ONT What's In My Pot (WIMP) pipeline. We computed relative abundance of taxa by dividing these genus-specific read counts by the total number of reads passing the QC filters for the same samples.
 
 <!-- Figure 1 was generated in R [@rteam2021], by joining the WIMP taxonomic results for all samples to their respective NCBI taxonomic IDs, aggregating at the genus level, and then plotting. The code used to generate the figure can be found at: https://github.com/signaturescience/habssed-data-ms -->
 
