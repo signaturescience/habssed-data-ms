@@ -71,7 +71,7 @@ d_format <- "Raw data (fastq.gz.file)"
 d_coll <- "DNeasy PowerWater® isolation kit was used to extract DNA from the water samples.  DNA was then sequenced using the Oxford Nanopore MinION® device."
 d_loc <- 	"Lake Erie NOAA GLERL stations WE13 and WE02. Latitude (approx.) 42.07 N Longitude (approx.) 81.34 W."
 #d_acc <- "$\\boldsymbol{\\cdot}$ The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770.\n $\\boldsymbol{\\cdot}$ Data and R code for the figures and tables in this manuscript can be located at https://github.com/signaturescience/habssed-data-ms"
-d_acc <- "The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770."
+d_acc <- "The raw sequences have been deposited in the NCBI Sequence Read Archive (SRA) under accession number PRJNA812770, accessible at https://www.ncbi.nlm.nih.gov/bioproject/PRJNA812770/."
 
 #Define table
 spec_tbl <- tibble(cat=c("Subject","Specific subject area", "Type of data","How the data were acquired","Data format","Description of data collection","Data source location","Data accessibility"), text=c(subject,sub_area,d_type,d_acq,d_format,d_coll,d_loc,d_acc))
