@@ -95,13 +95,13 @@ spec_tbl %>%
 
 * The data provide a snapshot of the microbiota present before and during a *Microcystis* bloom.
 * Harmful algal blooms, including *Microcystis* cause significant harm to human health and local economies.
-* Understanding the taxonomic makeup of the freshwater microbiome can give us insights into the dynamics of bloom formation.
+* Understanding the taxonomic makeup of the freshwater microbiome can provide insights into the dynamics of bloom formation.
 * Any stakeholders interested in the dynamics of HABs in general, and *Microcystis* blooms specifically may find these data to be of value.
 
 # Data Description
 
-This dataset consists of raw eDNA reads from before and during a *Microcystis* bloom.  The DNA was sequenced using the ONT MinION, and reads were classified taxonomically using the ONT What's In My Pot (WIMP) pipeline.  The complete dataset (all reads passing MinION QC) numbered `r samp_dat %>% pull(read_qcpass) %>% sum()` reads. Of these, `r samp_dat %>% pull(reads_classified) %>% sum()` were successfully taxonomically classified.
-Table 1 provides a subset of the metadata associated with these samples, including the GLERL from which the sample was drawn, the date of sampling, bloom condition at the time of sampling, and DNA concentration. Because some samples were sequenced as a single run, and others as part of a multiplexed run, the multiplexing information is also included. The full metadata is available on the SRA bioproject page.
+This dataset consists of raw environmental DNA (eDNA) reads from before and during a *Microcystis* bloom.  The DNA was sequenced using the ONT MinION, and reads were classified taxonomically using the ONT What's In My Pot (WIMP) pipeline.  The complete dataset (all reads passing MinION QC) numbered `r samp_dat %>% pull(read_qcpass) %>% sum() %>% scales::comma()` reads. Of these, `r samp_dat %>% pull(reads_classified) %>% sum() %>% scales::comma()` were successfully taxonomically classified.
+Table 1 provides a subset of the metadata associated with these samples, including the GLERL from which the sample was drawn, the date of sampling, bloom condition at the time of sampling, and DNA concentration. Because some samples were sequenced as a single run, and others as part of a multiplexed run, the multiplexing information is also included. The full metadata is available on the SRA BioProject page.
 
 \small
 
