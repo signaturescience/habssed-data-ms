@@ -12,4 +12,3 @@ data/*results.csv
 data/supplemental_table_S2_diffabund.csv
 data/wimp_classified_filt.rds
 data/ncbi_list.txt
-data/supplemental_table_S1_sampledata.csv
