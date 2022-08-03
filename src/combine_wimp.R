@@ -10,7 +10,7 @@ library("viridis")
 
 #Load in taxon lookup table
 tax_lookup <- read_tsv(here::here("data","ncbi_taxa.tsv"),
-                       col_names = c("taxID", "kingdome", "phylum", "class", "order",
+                       col_names = c("taxID", "kingdom", "phylum", "class", "order",
                                      "family","genus","species","strain"))
 
 #Read in all WIMP results
@@ -48,6 +48,8 @@ wimp_class <- all_wimp %>%
 
 #Write table
 saveRDS(wimp_class, here::here("data","wimp_classified_filt.rds"))
+wimp_class %>%
+  write_csv(here::here("data","wimp_classified_filt.csv"))
 
 #Make list of top 10 genera
 top_10_gen <- wimp_class %>%
